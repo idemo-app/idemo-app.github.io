@@ -6,119 +6,55 @@
 <title>Idemo — події для українців у Польщі</title>
 <meta name="description" content="Афіша українських подій у Польщі: концерти, стендап, театр, кіно й вечірки в одній стрічці.">
 <style>
-  :root {
-    color-scheme: light dark;
-    --bg: #ffffff;
-    --tint: #d6e4f5;
-    --text: #0a0a0c;
-    --muted: #6e6e76;
-    --surface: #f2f2f7;
-    --border: rgba(0, 0, 0, 0.1);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #000000;
-      --tint: #081d31;
-      --text: #ffffff;
-      --muted: #9a9aa4;
-      --surface: #1c1c1e;
-      --border: rgba(255, 255, 255, 0.1);
-    }
-  }
-
-  * { box-sizing: border-box; }
-
+  :root { color-scheme: light; }
   body {
-    margin: 0;
-    background: var(--bg);
-    background-image: linear-gradient(var(--tint), var(--bg) 55%);
-    background-repeat: no-repeat;
-    color: var(--text);
-    font: 17px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    -webkit-font-smoothing: antialiased;
+    max-width: 42em;
+    margin: 2.5rem auto 4rem;
+    padding: 0 1.25rem;
+    background: #fff;
+    color: #000;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
   }
-
-  main {
-    max-width: 640px;
-    margin: 0 auto;
-    padding: 72px 20px 40px;
-  }
-
-  h1 {
-    font-size: 34px;
-    line-height: 1.2;
-    letter-spacing: -0.6px;
-    margin: 0 0 14px;
-  }
-
-  h2 {
-    font-size: 20px;
-    letter-spacing: -0.3px;
-    margin: 40px 0 10px;
-  }
-
-  p { margin: 0 0 14px; }
-
-  .lead { color: var(--muted); font-size: 19px; }
-
-  ul { margin: 0 0 14px; padding-left: 22px; }
-  li { margin-bottom: 6px; }
-
-  a { color: inherit; text-decoration-color: var(--muted); text-underline-offset: 3px; }
-  a:hover { text-decoration-color: currentColor; }
-
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 18px 20px;
-    margin: 0 0 14px;
-  }
-
-  footer {
-    margin-top: 56px;
-    padding-top: 20px;
-    border-top: 1px solid var(--border);
-    color: var(--muted);
-    font-size: 15px;
-  }
-
-  footer a { display: inline-block; margin-right: 18px; }
+  h1 { font-size: 1.6em; margin: 0 0 .25em; }
+  h2 { font-size: 1.15em; margin: 2em 0 .5em; }
+  .lead { color: #555; margin: 0 0 2em; }
+  li { margin-bottom: .4em; }
+  a { color: #000; }
 </style>
 </head>
 <body>
-<main>
-  <h1>Idemo</h1>
-  <p class="lead">Події для українців у Польщі: концерти, стендап, театр, кіно й вечірки — в одній стрічці.</p>
 
-  <h2>Що це</h2>
-  <p>
-    Застосунок для iPhone, який збирає в одному місці події для української спільноти
-    в Польщі. Обираєте місто — і бачите, що відбувається найближчими днями.
-    Зберігаєте подію сердечком — і напередодні приходить нагадування.
-  </p>
-  <p>
-    Реєстрації немає: застосунок працює одразу після встановлення.
-    Реклами, стеження й розсилок теж немає.
-  </p>
+<h1>Idemo</h1>
+<p class="lead">Події для українців у Польщі.</p>
 
-  <h2>Міста</h2>
-  <p>Зараз відкриті Краків і Варшава. Далі — решта.</p>
+<h2>Що це</h2>
+<p>
+  Застосунок для iPhone, який збирає в одному місці події для української
+  спільноти в Польщі: концерти, стендап, театр, кіно й вечірки. Обираєте місто —
+  і бачите, що відбувається найближчими днями. Зберігаєте подію сердечком — і
+  напередодні приходить нагадування.
+</p>
+<p>
+  Реєстрації немає: застосунок працює одразу після встановлення. Реклами,
+  стеження й розсилок теж немає.
+</p>
 
-  <h2>Підтримка</h2>
-  <div class="card">
-    <p style="margin:0">
-      Щось не працює, подія зникла або ви організатор і хочете додати свою —
-      напишіть: <a href="mailto:ПОШТА@ПРИКЛАД">ПОШТА@ПРИКЛАД</a>
-    </p>
-  </div>
-  <p>Відповідаємо українською.</p>
+<h2>Міста</h2>
+<p>Зараз відкриті Краків і Варшава.</p>
 
-  <footer>
-    <a href="./privacy.html">Політика конфіденційності</a>
-    <a href="mailto:ПОШТА@ПРИКЛАД">Пошта</a>
-  </footer>
-</main>
+<h2>Підтримка</h2>
+<p>
+  Щось не працює, подія зникла або ви організатор і хочете додати свою — напишіть:
+  <a href="mailto:ПОШТА@ПРИКЛАД">ПОШТА@ПРИКЛАД</a>
+</p>
+<p>Відповідаємо українською.</p>
+
+<h2>Документи</h2>
+<ul>
+  <li><a href="./privacy.html">Політика конфіденційності</a></li>
+</ul>
+
 </body>
 </html>
