@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="uk">
+<script>document.documentElement.classList.add("js")</script>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -63,28 +64,26 @@
      Рамка iPhone 14 Pro з бібліотеки Devices.css v0.2.0 (MIT License,
      github.com/picturepan2/devices.css), у кольорі графіт. Бібліотека
      малює телефон 428×868 точок; тут він масштабується через --s, а
-     обгортка .phone займає рівно стільки місця, скільки видно.
-     Чорна смуга між екраном і корпусом ширша, ніж у бібліотеці (26
-     замість 19 точок), щоб скріншоти не впиралися в край. */
+     обгортка .phone займає рівно стільки місця, скільки видно. */
   .phone { --s: .62; position: relative; width: calc(428px * var(--s)); height: calc(868px * var(--s)); flex: none; }
   .device { position: absolute; top: 0; left: 0; width: 428px; height: 868px; transform: scale(var(--s)); transform-origin: 0 0; }
   .device, .device * , .device *::before, .device *::after { box-sizing: border-box; display: block; }
   .device-frame {
     position: relative; z-index: 1;
-    width: 428px; height: 868px; padding: 26px;
+    width: 428px; height: 868px; padding: 19px;
     background: #010101;
     border: 1px solid #4a4a4d;
     border-radius: 68px;
     box-shadow: inset 0 0 4px 2px #a1a1a6, inset 0 0 0 6px #3a3a3d, 0 60px 120px -40px rgba(0, 0, 0, .9);
   }
-  .device-screen { width: 376px; height: 816px; border-radius: 42px; object-fit: cover; object-position: top center; background: #000; }
+  .device-screen { width: 390px; height: 830px; border-radius: 49px; object-fit: cover; object-position: top center; background: #000; }
   .device-stripe::after, .device-stripe::before { content: ""; position: absolute; left: 0; z-index: 9; width: 100%; height: 7px; border: solid rgba(1, 1, 1, .25); border-width: 0 7px; }
   .device-stripe::after { top: 85px; }
   .device-stripe::before { bottom: 85px; }
-  .device-header { position: absolute; z-index: 2; top: 36px; left: 50%; width: 120px; height: 35px; margin-left: -60px; border-radius: 20px; background: #010101; }
+  .device-header { position: absolute; z-index: 2; top: 29px; left: 50%; width: 120px; height: 35px; margin-left: -60px; border-radius: 20px; background: #010101; }
   .device-sensors::after, .device-sensors::before { content: ""; position: absolute; z-index: 3; }
-  .device-sensors::after { top: 37px; left: 50%; width: 74px; height: 33px; margin-left: -60px; border-radius: 17px; background: #010101; }
-  .device-sensors::before { top: 49px; left: 50%; width: 9px; height: 9px; margin-left: 36px; border-radius: 50%; background: radial-gradient(farthest-corner at 20% 20%, #6074bf 0, transparent 40%), radial-gradient(farthest-corner at 80% 80%, #513785 0, #24555e 20%, transparent 50%); box-shadow: 0 0 1px 1px rgba(255, 255, 255, .05); }
+  .device-sensors::after { top: 30px; left: 50%; width: 74px; height: 33px; margin-left: -60px; border-radius: 17px; background: #010101; }
+  .device-sensors::before { top: 42px; left: 50%; width: 9px; height: 9px; margin-left: 36px; border-radius: 50%; background: radial-gradient(farthest-corner at 20% 20%, #6074bf 0, transparent 40%), radial-gradient(farthest-corner at 80% 80%, #513785 0, #24555e 20%, transparent 50%); box-shadow: 0 0 1px 1px rgba(255, 255, 255, .05); }
   .device-btns { position: absolute; top: 115px; left: -2px; width: 3px; height: 32px; border-radius: 2px; background: #4a4a4d; }
   .device-btns::after, .device-btns::before { content: ""; position: absolute; left: 0; width: 3px; height: 62px; border-radius: 2px; background: #4a4a4d; }
   .device-btns::after { top: 60px; }
@@ -95,12 +94,14 @@
   .hero { text-align: center; }
   .hero h1 { font-size: clamp(46px, 8vw, 92px); line-height: 1.02; font-weight: 800; letter-spacing: -.035em; margin-top: 90px; }
   .hero p { color: var(--text); font-size: clamp(19px, 2.2vw, 24px); margin: 26px auto 36px; max-width: 26em; }
-  /* Два телефони, обрізані знизу, тануть у чорному. padding-top лишає
-     місце для обідка, щоб overflow його не зрізав. */
-  .duo { display: flex; justify-content: center; align-items: flex-start; gap: 26px; margin-top: 80px; padding-top: 12px; height: 520px; overflow: hidden; }
-  .duo .phone:nth-child(1) { --s: .66; margin-top: 60px; }
-  .duo .phone:nth-child(2) { --s: .72; }
-  .fade { height: 160px; margin-top: -160px; position: relative; z-index: 4; background: linear-gradient(transparent, var(--bg)); }
+  /* Три телефони: посередині стрічка, по боках дві сторінки концертів,
+     трохи менші й заховані краєм за середній, низ на одній лінії.
+     Розмір усієї трійки задає --k: на компʼютері 1, на телефоні менше,
+     так що між крайніми телефонами й краєм екрана завжди лишається
+     відступ. */
+  .trio { --k: 1; display: flex; justify-content: center; align-items: flex-end; margin-top: 80px; }
+  .trio .phone { --s: calc(.62 * var(--k)); }
+  .trio .phone.mid { --s: calc(.7 * var(--k)); position: relative; z-index: 2; margin-inline: calc(-20px * var(--k)); }
 
   /* Коротко про Idemo перед картками: великий текст, перша думка біла,
      друга сіра, як на сторінках Apple. */
@@ -235,12 +236,23 @@
 
   @media (max-width: 860px) {
     .hero h1 { margin-top: 56px; }
-    .duo { height: 420px; margin-top: 56px; gap: 14px; }
-    .duo .phone:nth-child(1) { --s: .44; margin-top: 46px; }
-    .duo .phone:nth-child(2) { --s: .5; }
+    .trio { --k: .7; margin-top: 56px; }
     .intro { padding-block: 90px 70px; }
   }
-  @media (prefers-reduced-motion: reduce) { .cta { transition: none; } }
+  /* Ширина трійки на --k = 1 — близько 790 точок; тут вона стає
+     ширина екрана мінус по 18 точок з боків. */
+  @media (max-width: 600px) { .trio { --k: .43; margin-top: 48px; } }
+  @media (max-width: 370px) { .trio { --k: .38; } }
+
+  /* Ледь помітна поява блоків: при прокрутці вони виринають на 24 точки
+     знизу й проявляються. Ховаються лише коли працює скрипт, тож без
+     нього все видно одразу. */
+  .js .reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s ease, transform .9s cubic-bezier(.2, .7, .2, 1); }
+  .js .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .cta { transition: none; }
+    .js .reveal { transform: none; transition: opacity .6s ease; }
+  }
 </style>
 </head>
 <body>
@@ -255,20 +267,20 @@
     <p>Концерти, стендап, кіно й театр — в одній стрічці.</p>
     <a class="cta" href="https://apps.apple.com/app/id6831377926"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.2-.8-1.6 0-3.2 1-4 2.5-1.7 3-.4 7.4 1.2 9.8.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.2-.8 1.5 0 1.9.8 3.2.8 1.3 0 2.2-1.2 3-2.4.9-1.4 1.3-2.7 1.3-2.8-.1 0-2.6-1-2.6-4zM14 5.4c.7-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.2 1.8-1 2.9 1.1.1 2.1-.6 2.8-1.4z"/></svg>Завантажити в App Store</a>
   </div>
-  <div class="duo" aria-hidden="true">
+  <div class="trio" aria-hidden="true">
     <div class="phone"><div class="device"><div class="device-frame"><img class="device-screen" src="/img/event.webp" alt=""></div><div class="device-stripe"></div><div class="device-header"></div><div class="device-sensors"></div><div class="device-btns"></div><div class="device-power"></div></div></div>
-    <div class="phone"><div class="device"><div class="device-frame"><img class="device-screen" src="/img/feed-standup.webp" alt=""></div><div class="device-stripe"></div><div class="device-header"></div><div class="device-sensors"></div><div class="device-btns"></div><div class="device-power"></div></div></div>
+    <div class="phone mid"><div class="device"><div class="device-frame"><img class="device-screen" src="/img/feed-standup.webp" alt=""></div><div class="device-stripe"></div><div class="device-header"></div><div class="device-sensors"></div><div class="device-btns"></div><div class="device-power"></div></div></div>
+    <div class="phone"><div class="device"><div class="device-frame"><img class="device-screen" src="/img/event-hardkiss.webp" alt=""></div><div class="device-stripe"></div><div class="device-header"></div><div class="device-sensors"></div><div class="device-btns"></div><div class="device-power"></div></div></div>
   </div>
-  <div class="fade"></div>
 </header>
 
 <main>
 
   <section class="intro wrap">
-    <p>Трохи дому у твоєму місті. <span>Рідна мова зі сцени, улюблені артисти й свої люди поруч. Idemo збирає українські події Кракова, Варшави та Вроцлава в одному місці.</span></p>
+    <p class="reveal">Трохи дому у твоєму місті. <span>Рідна мова зі сцени, улюблені артисти й свої люди поруч. Idemo збирає українські події Кракова, Варшави та Вроцлава в одному місці.</span></p>
   </section>
 
-  <div class="rail">
+  <div class="rail reveal">
   <div class="track" id="track">
 
     <article class="card">
@@ -390,11 +402,13 @@
   </div>
 
   <section class="final wrap">
+    <div class="reveal">
     <h2>Ідемо?</h2>
     <a class="cta" href="https://apps.apple.com/app/id6831377926"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.2-.8-1.6 0-3.2 1-4 2.5-1.7 3-.4 7.4 1.2 9.8.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.2-.8 1.5 0 1.9.8 3.2.8 1.3 0 2.2-1.2 3-2.4.9-1.4 1.3-2.7 1.3-2.8-.1 0-2.6-1-2.6-4zM14 5.4c.7-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.2 1.8-1 2.9 1.1.1 2.1-.6 2.8-1.4z"/></svg>Завантажити в App Store</a>
+    </div>
     <div class="foot">
       <span>© 2026 Idemo</span>
-      <a href="mailto:idemo.contact@gmail.com">Підтримка</a>
+      <a href="/support.html">Підтримка</a>
       <a href="/privacy.html">Політика конфіденційності</a>
       <a href="/terms.html">Умови використання</a>
     </div>
@@ -403,6 +417,22 @@
 </main>
 
 <script>
+  // Поява блоків: щойно блок на десяту частину заїхав в екран, він
+  // проявляється, і за ним більше не стежимо.
+  (function () {
+    var els = document.querySelectorAll(".reveal");
+    if (!("IntersectionObserver" in window)) {
+      els.forEach(function (el) { el.classList.add("in"); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.1, rootMargin: "0px 0px -6% 0px" });
+    els.forEach(function (el) { io.observe(el); });
+  })();
+
   // Нескінченний ряд карток. Скрипт дописує в кінець копію карток, і
   // позиція ходить по колу в межах половини стрічки, тож стик непомітний.
   // Копії приховані від читалок екрана.

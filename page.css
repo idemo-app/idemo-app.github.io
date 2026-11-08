@@ -1,0 +1,82 @@
+/* Спільний вигляд сторінок підтримки, політики, умов і 404 — у тому
+   самому стилі, що й головна: чорне тло, білий текст, сірі пояснення,
+   темно-сірі картки, системний шрифт. Кольори й відступи збігаються з
+   index.html. */
+:root {
+  color-scheme: dark;
+  --bg: #000000;
+  --text: #f5f5f7;
+  --gray: #86868b;
+  --soft: #c7c7cc;
+  --line: rgba(255, 255, 255, .1);
+  --surface: #111113;
+  --raised: #232326;
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, "Segoe UI", Roboto, sans-serif;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+[hidden] { display: none !important; }
+a:focus-visible { outline: 2px solid var(--text); outline-offset: 4px; }
+
+.wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding-left: max(22px, env(safe-area-inset-left, 0px));
+  padding-right: max(22px, env(safe-area-inset-right, 0px));
+}
+
+/* Шапка, як на головній. */
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 18px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 19px; text-decoration: none; }
+.brand img { width: 30px; height: 30px; border-radius: 8px; }
+.pill { background: var(--text); color: #000; border-radius: 999px; padding: 7px 15px; font-size: 14px; font-weight: 600; text-decoration: none; white-space: nowrap; }
+
+/* ---------- Текст документа ---------- */
+.doc { padding-block: 64px 40px; }
+.doc h1 { margin: 0; font-size: clamp(40px, 7vw, 56px); line-height: 1.05; font-weight: 800; letter-spacing: -.035em; text-wrap: balance; }
+.doc .date { margin: 12px 0 0; color: var(--gray); font-size: 15px; }
+.doc .lead { margin: 40px 0 0; font-size: 21px; line-height: 1.5; color: var(--text); }
+.doc h2 { margin: 56px 0 0; font-size: 24px; line-height: 1.25; font-weight: 700; letter-spacing: -.02em; text-wrap: balance; }
+.doc p, .doc ul, .doc ol { margin: 14px 0 0; color: var(--soft); }
+.doc ul, .doc ol { padding-left: 1.3em; }
+.doc li + li { margin-top: 8px; }
+.doc li::marker { color: var(--gray); }
+.doc strong, .doc b { color: var(--text); font-weight: 600; }
+.doc a { color: var(--text); text-decoration-color: rgba(245, 245, 247, .35); text-underline-offset: 3px; }
+.doc a:hover { text-decoration-color: var(--text); }
+
+/* ---------- Картки (підтримка, 404) ---------- */
+.cards { display: grid; gap: 16px; margin-top: 40px; }
+.card { background: var(--surface); border-radius: 32px; padding: 34px 36px 36px; }
+.doc .card h2 { margin: 0; font-size: 24px; }
+.doc .card p { margin: 10px 0 0; color: var(--soft); }
+.card .btn { margin-top: 22px; }
+.btn { display: inline-flex; align-items: center; gap: 9px; max-width: 100%; background: var(--raised); color: var(--text); border-radius: 999px; padding: 12px 22px; font-weight: 600; font-size: 16px; text-decoration: none; overflow-wrap: anywhere; transition: background .2s; }
+.btn:hover { background: #2e2e32; }
+.btn svg { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.btn.light { background: var(--text); color: #000; }
+.btn.light svg { fill: currentColor; stroke: none; }
+.btn.light:hover { background: #fff; }
+.note { margin-top: 16px; color: var(--gray); font-size: 15px; }
+
+/* ---------- Низ, як на головній ---------- */
+.foot { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 26px; padding-block: 70px 56px; color: var(--gray); font-size: 13px; }
+.foot a { color: var(--gray); text-decoration: none; }
+.foot a:hover, .foot a[aria-current] { color: var(--text); }
+
+@media (max-width: 600px) {
+  .doc { padding-block: 40px 24px; }
+  .doc .lead { font-size: 19px; margin-top: 28px; }
+  .doc h2 { margin-top: 44px; font-size: 22px; }
+  .card { padding: 28px 24px 30px; }
+}
+@media (prefers-reduced-motion: reduce) { .btn { transition: none; } }
