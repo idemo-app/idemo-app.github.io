@@ -99,7 +99,9 @@
      Розмір усієї трійки задає --k: на компʼютері 1, на телефоні менше,
      так що між крайніми телефонами й краєм екрана завжди лишається
      відступ. */
-  .trio { --k: 1; display: flex; justify-content: center; align-items: flex-end; margin-top: 80px; }
+  .trio { --k: 1; position: relative; display: flex; justify-content: center; align-items: flex-end; margin-top: 80px; }
+  /* Низ телефонів тане в чорному, як було з двома телефонами. */
+  .trio::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 42%; z-index: 3; pointer-events: none; background: linear-gradient(transparent, var(--bg) 92%); }
   .trio .phone { --s: calc(.62 * var(--k)); }
   .trio .phone.mid { --s: calc(.7 * var(--k)); position: relative; z-index: 2; margin-inline: calc(-20px * var(--k)); }
 
