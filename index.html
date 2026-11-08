@@ -107,6 +107,10 @@
   .trio .phone { --s: calc(.62 * var(--k)); }
   .trio .phone.mid { --s: calc(.7 * var(--k)); position: relative; z-index: 2; margin-inline: calc(-20px * var(--k)); }
 
+  /* Тонка риска між телефонами й текстом, як розділювачі на apple.com:
+     у ширину тексту сторінки, не на весь екран. */
+  .rule { height: 1px; margin: 32px 0 0; border: 0; background: var(--line); }
+
   /* Коротко про Idemo перед картками: великий текст, перша думка біла,
      друга сіра, як на сторінках Apple. */
   .intro { padding-block: 150px 110px; }
@@ -279,6 +283,8 @@
 </header>
 
 <main>
+
+  <div class="wrap"><hr class="rule"></div>
 
   <section class="intro wrap">
     <p class="reveal">Трохи дому у твоєму місті. <span>Рідна мова зі сцени, улюблені артисти й свої люди поруч. Idemo збирає українські події Кракова, Варшави та Вроцлава в одному місці.</span></p>
