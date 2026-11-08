@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Idemo — події для українців у Польщі</title>
+<meta name="description" content="Подія в застосунку Idemo: концерти, стендап, театр, кіно й вечірки для українців у Польщі.">
+<!-- Прев'ю в месенджерах. Сторінка одна на всі посилання на події, тож
+     прев'ю загальне — назва й іконка Idemo, без постера конкретної події. -->
+<meta property="og:site_name" content="Idemo">
+<meta property="og:title" content="Idemo — події для українців у Польщі">
+<meta property="og:description" content="Відкрийте подію в застосунку Idemo.">
+<meta property="og:image" content="https://idemoapp.com/icon.png">
+<!-- Банер Safari «Відкрити / Завантажити» вгорі сторінки. -->
+<meta name="apple-itunes-app" content="app-id=6831377926">
+<link rel="icon" href="/favicon.png">
+<style>
+  :root { color-scheme: light; }
+  body {
+    max-width: 30em;
+    margin: 4rem auto;
+    padding: 0 1.25rem;
+    background: #fff;
+    color: #000;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    text-align: center;
+  }
+  img { width: 96px; height: 96px; border-radius: 22px; }
+  h1 { font-size: 1.5em; margin: 1em 0 .25em; }
+  p { color: #555; margin: 0 0 1.5em; }
+  .button {
+    display: inline-block;
+    padding: .8em 1.6em;
+    border-radius: 999px;
+    background: #000;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .small { margin-top: 2em; font-size: .9em; }
+  .small a { color: #000; }
+  [hidden] { display: none; }
+</style>
+</head>
+<body>
+
+<!--
+  GitHub Pages віддає цей файл на будь-яку адресу, якої немає на сайті.
+  Посилання на події (idemoapp.com/event/…) окремих сторінок не мають:
+  на iPhone з Idemo їх одразу відкриває застосунок (файл
+  .well-known/apple-app-site-association), а сюди потрапляють ті, в кого
+  застосунку ще немає, — їм кнопка App Store.
+-->
+
+<img src="/icon.png" alt="">
+
+<div id="event">
+  <h1>Ця подія — в застосунку Idemo</h1>
+  <p>
+    Якщо Idemo вже стоїть на вашому iPhone, відкрийте посилання ще раз —
+    подія відкриється в застосунку. Якщо ні — завантажте його:
+  </p>
+  <a class="button" href="https://apps.apple.com/app/id6831377926">Завантажити в App Store</a>
+</div>
+
+<div id="missing" hidden>
+  <h1>Такої сторінки немає</h1>
+  <p>Посилання застаріло або в ньому помилка.</p>
+  <a class="button" href="/">На головну</a>
+</div>
+
+<p class="small"><a href="/">Idemo</a> — події для українців у Польщі</p>
+
+<script>
+  // Не посилання на подію — звичайне «не знайдено».
+  if (!location.pathname.startsWith('/event/')) {
+    document.getElementById('event').hidden = true;
+    document.getElementById('missing').hidden = false;
+  }
+</script>
+
+</body>
+</html>

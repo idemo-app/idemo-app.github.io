@@ -1,0 +1,12 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["M7QQAPQ986.com.idemoapp.ios"],
+        "components": [
+          { "/": "/event/*", "comment": "Сторінка події: відкривається в застосунку Idemo" }
+        ]
+      }
+    ]
+  }
+}
