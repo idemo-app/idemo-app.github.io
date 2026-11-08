@@ -445,9 +445,8 @@
   // на набір назад непомітний, бо там ті самі картки.
   //
   // Один цикл кадрів рухає ряд з трьох джерел: власний повільний хід,
-  // палець або миша, що тягнуть, і інерція після відпускання. Під
-  // курсором миші і поки тягнуть власний хід стоїть, потім за секунду
-  // плавно повертається. Тим, хто вимкнув анімації в системі, ряд сам не
+  // палець або миша, що тягнуть, і інерція після відпускання. Поки
+  // тягнуть, власний хід стоїть, потім за секунду плавно повертається. Тим, хто вимкнув анімації в системі, ряд сам не
   // рухається, але тягнеться.
   (function () {
     var track = document.getElementById("track");
@@ -468,7 +467,7 @@
     var SPEED = 0.012;            // власний хід: 12 точок за секунду
     var calm = matchMedia("(prefers-reduced-motion: reduce)");
     var W = 0, x = 0, v = 0;      // ширина набору, позиція, швидкість інерції (точок за мс)
-    var auto = 1, hover = false;
+    var auto = 1;
     var drag = null;              // { id, x, y, t, on }
 
     // Ширина одного набору — пʼять карток із проміжками (відступ праворуч
@@ -484,8 +483,6 @@
     measure();
     addEventListener("resize", measure);
 
-    rail.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") hover = true; });
-    rail.addEventListener("pointerleave", function () { hover = false; });
 
     track.addEventListener("pointerdown", function (e) {
       if (e.pointerType === "mouse" && e.button !== 0) return;
@@ -533,7 +530,7 @@
     function frame(now) {
       var dt = Math.min(64, now - last);
       last = now;
-      var held = hover || (drag && drag.on);
+      var held = drag && drag.on;
       auto = held ? 0 : Math.min(1, auto + dt / 1000);
       if (!drag || !drag.on) {
         x += v * dt;
