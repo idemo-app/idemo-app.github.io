@@ -128,7 +128,9 @@
   .track { display: flex; gap: 20px; width: max-content; padding-right: 20px; touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none; will-change: transform; }
   .track.dragging { cursor: grabbing; }
   .track img { -webkit-user-drag: none; }
-  .card { flex: 0 0 min(340px, 76vw); background: var(--surface); border-radius: 32px; overflow: hidden; display: flex; flex-direction: column; }
+  /* Кожна картка — окремий шар: iPhone малює її один раз, а далі лише
+     пересуває, замість перемальовувати стрічку на кожному кадрі. */
+  .card { flex: 0 0 min(340px, 76vw); will-change: transform; background: var(--surface); border-radius: 32px; overflow: hidden; display: flex; flex-direction: column; }
   .card-text { padding: 2px 26px 30px; }
   .card h3 { margin: 0; font-size: 23px; line-height: 1.15; font-weight: 700; letter-spacing: -.022em; text-wrap: balance; }
   .card p { margin: 6px 0 0; color: var(--gray); font-size: 16px; line-height: 1.45; }
@@ -158,11 +160,13 @@
     display: grid; place-items: center;
   }
   .scene { font-size: calc(100cqw / 24); width: 21em; position: relative; }
+  /* Світло — готова картинка, розмита заздалегідь (img/glow-*.webp,
+     256×256 з прозорими краями). Розмивати на льоту filter: blur на
+     iPhone надто повільно: ряд карток смикався, а нові картки не
+     встигали домалюватись і на їхньому місці було порожньо. */
   .art::before {
-    content: ""; position: absolute; inset: 12% 10%; z-index: -1;
-    border-radius: 50%;
-    background: var(--glow);
-    filter: blur(44px) saturate(1.5);
+    content: ""; position: absolute; inset: 0; z-index: -1;
+    background: var(--glow) center / 100% 100% no-repeat;
     opacity: .7;
   }
   .glass {
@@ -292,7 +296,7 @@
   <div class="track" id="track">
 
     <article class="card">
-      <div class="art" style="--glow: url(/img/city-krakow.jpg) center / cover" aria-hidden="true">
+      <div class="art" style="--glow: url(/img/glow-krakow.webp)" aria-hidden="true">
         <div class="scene cities">
           <div class="city on" style="background-image:url(/img/city-krakow.jpg)"><i class="check"></i><span>Краків</span></div>
           <div class="city" style="background-image:url(/img/city-warszawa.jpg)"><span>Варшава</span></div>
@@ -306,7 +310,7 @@
     </article>
 
     <article class="card">
-      <div class="art" style="--glow: url(/img/feed-standup.webp) 50% 31.5% / 111% auto no-repeat" aria-hidden="true">
+      <div class="art" style="--glow: url(/img/glow-felix.webp)" aria-hidden="true">
         <div class="scene menu-wrap">
           <div class="menu-back glass">
             <svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="6.5" r="2.8"/><path d="M12 9.3V18"/><path d="M8 16.5c-2.2.4-3.5 1.1-3.5 1.9 0 1.2 3.4 2.1 7.5 2.1s7.5-.9 7.5-2.1c0-.8-1.3-1.5-3.5-1.9"/></svg>
@@ -338,7 +342,7 @@
     </article>
 
     <article class="card">
-      <div class="art" style="--glow: url(/img/feed-standup.webp) 50% 98.3% / 111% auto no-repeat" aria-hidden="true">
+      <div class="art" style="--glow: url(/img/glow-berezhko.webp)" aria-hidden="true">
         <div class="scene">
           <div class="search glass">
             <svg class="ic" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg>
@@ -363,7 +367,7 @@
     </article>
 
     <article class="card">
-      <div class="art" style="--glow: url(/img/event.webp) 50% 26% / 111% auto no-repeat" aria-hidden="true">
+      <div class="art" style="--glow: url(/img/glow-tina.webp)" aria-hidden="true">
         <div class="scene notes">
           <div class="note glass">
             <img src="/icon.png" alt="">
@@ -388,7 +392,7 @@
     </article>
 
     <article class="card">
-      <div class="art" style="--glow: url(/img/event.webp) 50% 26% / 111% auto no-repeat" aria-hidden="true">
+      <div class="art" style="--glow: url(/img/glow-tina.webp)" aria-hidden="true">
         <div class="scene route glass">
           <svg viewBox="0 0 330 320" aria-hidden="true">
             <path d="M59 262 C112 262 120 214 152 192 S232 172 251 128" fill="none" stroke="rgba(10,132,255,.22)" stroke-width="16" stroke-linecap="round"/>
