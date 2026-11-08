@@ -437,9 +437,12 @@
     els.forEach(function (el) { io.observe(el); });
   })();
 
-  // Нескінченний ряд карток. Скрипт дописує в кінець копію карток, і
-  // позиція ходить по колу в межах половини стрічки, тож стик непомітний.
-  // Копії приховані від читалок екрана.
+  // Нескінченний ряд карток. Пʼять справжніх карток стоять посередині
+  // стрічки, а з обох боків — їхні копії, приховані від читалок екрана:
+  // один набір ліворуч і стільки праворуч, щоб закрити будь-яку ширину
+  // екрана. Позиція завжди тримається в межах одного набору, тож і
+  // ліворуч, і праворуч від видимих карток завжди є сусідні, а перескок
+  // на набір назад непомітний, бо там ті самі картки.
   //
   // Один цикл кадрів рухає ряд з трьох джерел: власний повільний хід,
   // палець або миша, що тягнуть, і інерція після відпускання. Під
@@ -449,23 +452,37 @@
   (function () {
     var track = document.getElementById("track");
     var rail = track.parentNode;
-    Array.prototype.slice.call(track.children).forEach(function (card) {
-      var copy = card.cloneNode(true);
-      copy.setAttribute("aria-hidden", "true");
-      track.appendChild(copy);
-    });
+    var originals = Array.prototype.slice.call(track.children);
+    var sets = 1;                 // скільки наборів карток у стрічці
+    function copySet(before) {
+      var first = track.firstChild;
+      originals.forEach(function (card) {
+        var copy = card.cloneNode(true);
+        copy.setAttribute("aria-hidden", "true");
+        if (before) track.insertBefore(copy, first); else track.appendChild(copy);
+      });
+      sets++;
+    }
+    copySet(true);
 
     var SPEED = 0.012;            // власний хід: 12 точок за секунду
     var calm = matchMedia("(prefers-reduced-motion: reduce)");
-    var half = 0, x = 0, v = 0;   // позиція і швидкість інерції (точок за мс)
+    var W = 0, x = 0, v = 0;      // ширина набору, позиція, швидкість інерції (точок за мс)
     var auto = 1, hover = false;
     var drag = null;              // { id, x, y, t, on }
 
-    function measure() { half = track.scrollWidth / 2; }
+    // Ширина одного набору — пʼять карток із проміжками (відступ праворуч
+    // у стрічки дорівнює проміжку, тож вона ділиться рівно). Праворуч
+    // докладаємо набори, поки за видимою частиною лишається запас.
+    function measure() {
+      var phase = W ? (-x - W) / W : 0;
+      W = track.scrollWidth / sets;
+      while (track.scrollWidth < 2 * W + rail.clientWidth + W) { copySet(false); }
+      x = -W - phase * W;
+    }
+    function wrap() { if (!W) return; while (x > -W) x -= W; while (x <= -2 * W) x += W; }
     measure();
     addEventListener("resize", measure);
-
-    function wrap() { if (half) { x %= half; if (x > 0) x -= half; } }
 
     rail.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") hover = true; });
     rail.addEventListener("pointerleave", function () { hover = false; });
