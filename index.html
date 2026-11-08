@@ -416,8 +416,8 @@
       copy.setAttribute("aria-hidden", "true");
       track.appendChild(copy);
     });
-    // Однакова швидкість на будь-якому екрані: близько 40 точок за секунду.
-    track.style.setProperty("--dur", Math.round(track.scrollWidth / 2 / 40) + "s");
+    // Однакова швидкість на будь-якому екрані: 12 точок за секунду, ледь помітний рух.
+    track.style.setProperty("--dur", Math.round(track.scrollWidth / 2 / 12) + "s");
     track.classList.add("moving");
   })();
 </script>
