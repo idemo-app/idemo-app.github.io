@@ -121,16 +121,21 @@
 
   /* ---------- Картки-ілюстрації ----------
      Пʼять карток в один ряд, що сам повільно пливе вліво, без кінця:
-     за пʼятою знову йде перша. Ряд можна тягнути пальцем чи мишею або
-     гортати тачпадом, після цього він знову пливе сам. Вертикальний
-     свайп лишається за сторінкою (touch-action: pan-y). */
-  .rail { overflow: hidden; padding-block: 4px 40px; padding-left: max(22px, env(safe-area-inset-left, 0px), calc((100% - 1036px) / 2)); }
-  .track { display: flex; gap: 20px; width: max-content; padding-right: 20px; touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none; will-change: transform; }
+     за пʼятою знову йде перша. Ряд — звичайна горизонтальна прокрутка:
+     під пальцем і тачпадом його гортає сам браузер, з рідною інерцією,
+     плавно навіть у режимі енергозбереження iPhone, і заздалегідь
+     домальовує картки, що підʼїжджають. Скрипт лише повільно зсуває
+     прокрутку, коли її ніхто не чіпає, і непомітно перескакує на
+     такий самий набір карток, щоб ряд не мав кінця. Смуга прокрутки
+     схована. */
+  .rail { overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; scrollbar-width: none; padding-block: 4px 40px; padding-left: max(22px, env(safe-area-inset-left, 0px), calc((100% - 1036px) / 2)); }
+  .rail::-webkit-scrollbar { display: none; }
+  /* will-change тут для дробового зсуву, меншого за точку: решту руху
+     бере прокрутка. */
+  .track { display: flex; gap: 20px; width: max-content; padding-right: 20px; cursor: grab; user-select: none; -webkit-user-select: none; will-change: transform; }
   .track.dragging { cursor: grabbing; }
   .track img { -webkit-user-drag: none; }
-  /* Кожна картка — окремий шар: iPhone малює її один раз, а далі лише
-     пересуває, замість перемальовувати стрічку на кожному кадрі. */
-  .card { flex: 0 0 min(340px, 76vw); will-change: transform; background: var(--surface); border-radius: 32px; overflow: hidden; display: flex; flex-direction: column; }
+  .card { flex: 0 0 min(340px, 76vw); background: var(--surface); border-radius: 32px; overflow: hidden; display: flex; flex-direction: column; }
   .card-text { padding: 2px 26px 30px; }
   .card h3 { margin: 0; font-size: 23px; line-height: 1.15; font-weight: 700; letter-spacing: -.022em; text-wrap: balance; }
   .card p { margin: 6px 0 0; color: var(--gray); font-size: 16px; line-height: 1.45; }
@@ -445,22 +450,25 @@
     els.forEach(function (el) { io.observe(el); });
   })();
 
-  // Нескінченний ряд карток. Пʼять справжніх карток стоять посередині
-  // стрічки, а з обох боків — їхні копії, приховані від читалок екрана:
-  // один набір ліворуч і стільки праворуч, щоб закрити будь-яку ширину
-  // екрана. Позиція завжди тримається в межах одного набору, тож і
-  // ліворуч, і праворуч від видимих карток завжди є сусідні, а перескок
-  // на набір назад непомітний, бо там ті самі картки.
+  // Нескінченний ряд карток на звичайній горизонтальній прокрутці.
   //
-  // Один цикл кадрів рухає ряд з трьох джерел: власний повільний хід,
-  // палець або миша, що тягнуть, і інерція після відпускання. Поки
-  // тягнуть, власний хід стоїть, потім за секунду плавно повертається. Тим, хто вимкнув анімації в системі, ряд сам не
-  // рухається, але тягнеться.
+  // Пʼять справжніх карток стоять посередині, з обох боків — їхні копії,
+  // приховані від читалок екрана: два набори ліворуч і стільки праворуч,
+  // щоб навіть сильний змах пальцем не доїхав до краю. Коли ряд ніхто не
+  // чіпає, позиція прокрутки повертається в межі середнього набору
+  // стрибком рівно на один набір — там ті самі картки, тож стрибка не видно.
+  //
+  // Власний хід — 12 точок за секунду. Прокрутка вміє лише цілі точки,
+  // тому дробова частина зсуву йде в transform стрічки (менше точки), і
+  // рух лишається плавним. Пальцем, тачпадом і колесом ряд гортає сам
+  // браузер; мишею — скрипт, з інерцією. Поки людина гортає і ще чверть
+  // секунди після, власний хід стоїть, потім за секунду плавно рушає.
+  // Тим, хто вимкнув анімації в системі, ряд сам не рухається.
   (function () {
     var track = document.getElementById("track");
     var rail = track.parentNode;
     var originals = Array.prototype.slice.call(track.children);
-    var sets = 1;                 // скільки наборів карток у стрічці
+    var sets = 1;
     function copySet(before) {
       var first = track.firstChild;
       originals.forEach(function (card) {
@@ -470,84 +478,98 @@
       });
       sets++;
     }
-    copySet(true);
+    copySet(true); copySet(true);
 
-    var SPEED = 0.012;            // власний хід: 12 точок за секунду
+    var SPEED = 0.012;              // точок за мс
     var calm = matchMedia("(prefers-reduced-motion: reduce)");
-    var W = 0, x = 0, v = 0;      // ширина набору, позиція, швидкість інерції (точок за мс)
-    var auto = 1;
-    var drag = null;              // { id, x, y, t, on }
+    var W = 0;                      // ширина набору карток
+    var pos = 0;                    // бажана позиція прокрутки, з дробом
+    var whole = NaN;                // ціла позиція, яку скрипт записав останньою
+    var written = -1;               // що після цього показує scrollLeft
+    var shift = 0;                  // дробовий зсув стрічки через transform
+    var auto = 1, v = 0;            // розгін власного ходу; інерція миші
+    var touching = false, quietUntil = 0, mouse = null;
 
-    // Ширина одного набору — пʼять карток із проміжками (відступ праворуч
-    // у стрічки дорівнює проміжку, тож вона ділиться рівно). Праворуч
-    // докладаємо набори, поки за видимою частиною лишається запас.
-    function measure() {
-      var phase = W ? (-x - W) / W : 0;
-      W = track.scrollWidth / sets;
-      while (track.scrollWidth < 2 * W + rail.clientWidth) { copySet(false); }
-      x = -W - phase * W;
+    function setShift(f) {
+      if (Math.abs(f - shift) < 0.01) return;
+      shift = f;
+      track.style.transform = f ? "translate3d(" + (-f) + "px,0,0)" : "";
     }
-    function wrap() { if (!W) return; while (x > -W) x -= W; while (x <= -2 * W) x += W; }
+    // На екранах з дробовими точками scrollLeft може повернути не рівно
+    // те, що записали, тому порівнюємо з тим, що записали, а зсув рахуємо
+    // від того, що повернулось.
+    function write() {
+      var w = Math.floor(pos);
+      if (w !== whole) { whole = w; rail.scrollLeft = w; written = rail.scrollLeft; }
+      setShift(pos - written);
+    }
+    // Людина зсунула прокрутку: беремо її позицію за свою.
+    function takeOver() { hold(); written = rail.scrollLeft; whole = NaN; pos = written; setShift(0); }
+    function wrap() { while (pos < 1.5 * W) pos += W; while (pos >= 2.5 * W) pos -= W; }
+    function measure() {
+      var phase = W ? (pos - 2 * W) / W : 0;
+      W = track.scrollWidth / sets;
+      while (track.scrollWidth < 4 * W + rail.clientWidth) { copySet(false); }
+      pos = 2 * W + phase * W;
+      wrap(); write();
+    }
     measure();
     addEventListener("resize", measure);
 
+    // Будь-яка прокрутка, якої не робив скрипт, — це людина (палець,
+    // інерція після нього, тачпад): зупиняємо власний хід.
+    function hold() { quietUntil = performance.now() + 250; }
+    rail.addEventListener("scroll", function () {
+      if (Math.abs(rail.scrollLeft - written) > 1) takeOver();
+    }, { passive: true });
+    rail.addEventListener("touchstart", function () { touching = true; setShift(0); pos = written; }, { passive: true });
+    function untouch() { touching = false; hold(); }
+    rail.addEventListener("touchend", untouch, { passive: true });
+    rail.addEventListener("touchcancel", untouch, { passive: true });
 
+    // Миша: тягнемо прокрутку самі, після відпускання — інерція.
     track.addEventListener("pointerdown", function (e) {
-      if (e.pointerType === "mouse" && e.button !== 0) return;
-      drag = { id: e.pointerId, x: e.clientX, y: e.clientY, t: e.timeStamp, on: false };
+      if (e.pointerType !== "mouse" || e.button !== 0) return;
+      mouse = { x: e.clientX, t: e.timeStamp };
       v = 0;
+      track.setPointerCapture(e.pointerId);
+      track.classList.add("dragging");
     });
     track.addEventListener("pointermove", function (e) {
-      if (!drag || e.pointerId !== drag.id) return;
-      var dx = e.clientX - drag.x;
-      if (!drag.on) {
-        // Рішення, куди тягнуть, приймаємо після перших кількох точок:
-        // вбік — тягнемо ряд, вгору-вниз — це прокрутка сторінки.
-        if (Math.abs(dx) < 6 && Math.abs(e.clientY - drag.y) < 6) return;
-        if (Math.abs(e.clientY - drag.y) > Math.abs(dx)) { drag = null; return; }
-        drag.on = true;
-        track.setPointerCapture(e.pointerId);
-        track.classList.add("dragging");
-      }
-      var dt = Math.max(1, e.timeStamp - drag.t);
-      x += dx;
-      v = 0.8 * (dx / dt) + 0.2 * v;
-      drag.x = e.clientX; drag.y = e.clientY; drag.t = e.timeStamp;
-      wrap();
+      if (!mouse) return;
+      var dx = e.clientX - mouse.x, dt = Math.max(1, e.timeStamp - mouse.t);
+      pos -= dx; v = 0.8 * (dx / dt) + 0.2 * v;
+      whole = NaN;
+      mouse.x = e.clientX; mouse.t = e.timeStamp;
+      wrap(); write(); hold();
     });
     function release(e) {
-      if (!drag || e.pointerId !== drag.id) return;
-      // Якщо палець зупинився перед відпусканням, інерції немає.
-      if (e.timeStamp - drag.t > 80) v = 0;
-      drag = null;
+      if (!mouse) return;
+      if (e.timeStamp - mouse.t > 80) v = 0;
+      mouse = null;
       track.classList.remove("dragging");
     }
     track.addEventListener("pointerup", release);
     track.addEventListener("pointercancel", release);
 
-    // Тачпад і колесо з горизонтальним зсувом гортають ряд, вертикальне
-    // колесо лишається сторінці.
-    rail.addEventListener("wheel", function (e) {
-      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
-      e.preventDefault();
-      x -= e.deltaX; v = 0; auto = 0;
-      wrap();
-    }, { passive: false });
-
     var last = performance.now();
     function frame(now) {
       var dt = Math.min(64, now - last);
       last = now;
-      var held = drag && drag.on;
-      auto = held ? 0 : Math.min(1, auto + dt / 1000);
-      if (!drag || !drag.on) {
-        x += v * dt;
-        v *= Math.pow(0.95, dt / 16);
-        if (Math.abs(v) < 0.001) v = 0;
-        if (!calm.matches) x -= SPEED * auto * dt;
+      // Подія scroll може запізнитись на кадр — перевіряємо й тут.
+      if (!mouse && Math.abs(rail.scrollLeft - written) > 1) takeOver();
+      if (touching || mouse || now < quietUntil) {
+        auto = 0;
+      } else {
+        auto = Math.min(1, auto + dt / 1000);
+        if (v) {
+          pos -= v * dt;
+          v *= Math.pow(0.95, dt / 16);
+          if (Math.abs(v) < 0.001) v = 0;
+        }
+        if (!calm.matches) pos += SPEED * auto * dt;
+        wrap(); write();
       }
-      wrap();
-      track.style.transform = "translate3d(" + x + "px,0,0)";
       requestAnimationFrame(frame);
     }
     requestAnimationFrame(frame);
