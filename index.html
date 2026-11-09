@@ -135,7 +135,11 @@
   .track { display: flex; gap: 20px; width: max-content; padding-right: var(--end, 22px); cursor: grab; user-select: none; -webkit-user-select: none; will-change: transform; }
   .track.dragging { cursor: grabbing; }
   .track img { -webkit-user-drag: none; }
-  .card { flex: 0 0 min(340px, 76vw); background: var(--surface); border-radius: 32px; overflow: hidden; display: flex; flex-direction: column; }
+  /* Ширина картки задана саме як width, а не лише як flex-basis: Safari
+     рахує довжину стрічки (width: max-content) за вмістом карток, тобто за
+     текстом в один рядок, і без явної ширини стрічка виходила довшою за
+     самі картки — після останньої лишалась порожнеча. */
+  .card { flex: none; width: min(340px, 76vw); background: var(--surface); border-radius: 32px; overflow: hidden; display: flex; flex-direction: column; }
   /* position: relative — щоб текст лежав над світлом ілюстрації, яке
      заходить під нього. */
   .card-text { position: relative; padding: 2px 26px 30px; }
